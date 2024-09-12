@@ -11,37 +11,30 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import pe.edu.upc.superherocompose.common.Constants
+import pe.edu.upc.superherocompose.data.remote.HeroService
+import pe.edu.upc.superherocompose.data.repository.HeroRepository
+import pe.edu.upc.superherocompose.presentation.HeroListScreen
+import pe.edu.upc.superherocompose.presentation.HeroListViewModel
 import pe.edu.upc.superherocompose.ui.theme.SuperHeroComposeTheme
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : ComponentActivity() {
+    private val service = Retrofit
+        .Builder()
+        .baseUrl(Constants.BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(HeroService::class.java)
+    private val viewModel = HeroListViewModel(HeroRepository(service))
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             SuperHeroComposeTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                HeroListScreen(viewModel)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SuperHeroComposeTheme {
-        Greeting("Android")
     }
 }

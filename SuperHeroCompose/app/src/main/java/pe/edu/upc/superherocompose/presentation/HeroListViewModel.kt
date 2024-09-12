@@ -33,9 +33,3 @@ class HeroListViewModel(private val repository: HeroRepository): ViewModel() {
 
     }
 }
-
-data class HeroListState(
-    val isLoading: Boolean = false,
-    val heroes: List<Hero>? = null,
-    val message: String = ""
-)
