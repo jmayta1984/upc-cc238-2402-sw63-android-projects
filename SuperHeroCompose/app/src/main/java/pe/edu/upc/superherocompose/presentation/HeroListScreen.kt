@@ -59,14 +59,18 @@ fun HeroListScreen(viewModel: HeroListViewModel) {
                                 .padding(4.dp)
                         ) {
 
-                            HeroImage(hero)
+                            HeroItem(hero) {
+                                viewModel.toggleFavorite(hero)
+                            }
                         }
                     }
                 }
             }
-            Column(modifier = Modifier.fillMaxSize(),
+            Column(
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center) {
+                verticalArrangement = Arrangement.Center
+            ) {
                 if (state.isLoading) {
                     CircularProgressIndicator()
                 }
@@ -80,7 +84,7 @@ fun HeroListScreen(viewModel: HeroListViewModel) {
 }
 
 @Composable
-fun HeroImage(hero: Hero) {
+fun HeroItem(hero: Hero, onFavoritePressed: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -101,8 +105,14 @@ fun HeroImage(hero: Hero) {
             Text(hero.fullName)
         }
 
-        IconButton(onClick = {}) {
-            Icon(Icons.Filled.Favorite, "Favorite", tint = if (hero.isFavorite) Color.Red else Color.Gray)
+        IconButton(onClick = {
+            onFavoritePressed()
+        }) {
+            Icon(
+                Icons.Filled.Favorite,
+                "Favorite",
+                tint = if (hero.isFavorite) Color.Red else Color.Gray
+            )
         }
     }
 }

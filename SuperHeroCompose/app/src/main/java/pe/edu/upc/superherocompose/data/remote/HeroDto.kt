@@ -15,4 +15,4 @@ data class HeroDto(
     val work: Work
 )
 
-fun HeroDto.toHero() = Hero(name, biography.fullName, image.url)
+fun HeroDto.toHero() = Hero(id, name, biography.fullName, image.url)
