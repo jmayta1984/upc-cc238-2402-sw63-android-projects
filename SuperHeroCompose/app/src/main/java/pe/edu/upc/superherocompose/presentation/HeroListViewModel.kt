@@ -36,8 +36,16 @@ class HeroListViewModel(private val repository: HeroRepository): ViewModel() {
 
     fun toggleFavorite(hero: Hero){
         hero.isFavorite = !hero.isFavorite
-        val heroes = _state.value.data
-        _state.value = UIState(data = emptyList())
-        _state.value = UIState(data = heroes)
+        viewModelScope.launch {
+            if (hero.isFavorite) {
+                repository.insertHero(hero)
+            } else {
+                repository.deleteHero(hero)
+            }
+            val heroes = _state.value.data
+            _state.value = UIState(data = emptyList())
+            _state.value = UIState(data = heroes)
+        }
+
     }
 }

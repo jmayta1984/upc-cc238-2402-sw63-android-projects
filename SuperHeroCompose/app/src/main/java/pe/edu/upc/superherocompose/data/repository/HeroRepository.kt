@@ -32,7 +32,7 @@ class HeroRepository(
                 heroesDto.forEach { heroDto: HeroDto ->
                     val hero = heroDto.toHero()
                     hero.isFavorite = isFavorite(hero.id)
-                    heroes += hero
+                    heroes.add(hero)
                 }
                 return@withContext Resource.Success(data = heroes)
             }
