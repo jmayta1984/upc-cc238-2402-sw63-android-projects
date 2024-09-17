@@ -1,10 +1,9 @@
 package pe.edu.upc.superherocompose.presentation
 
-import android.widget.Space
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.ImageOptions
@@ -50,7 +50,7 @@ fun HeroListScreen(viewModel: HeroListViewModel) {
             OutlinedButton(onClick = {
                 viewModel.searchHero()
             }) { Text("Search") }
-            state.heroes?.let { heroes: List<Hero> ->
+            state.data?.let { heroes: List<Hero> ->
                 LazyColumn {
                     items(heroes) { hero: Hero ->
                         Card(
@@ -59,40 +59,50 @@ fun HeroListScreen(viewModel: HeroListViewModel) {
                                 .padding(4.dp)
                         ) {
 
-                            Row(
-                                modifier = Modifier, verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                GlideImage(
-                                    modifier = Modifier.size(80.dp) ,
-                                    imageModel = { hero.poster }, // loading a network image using an URL.
-                                    imageOptions = ImageOptions(
-                                        contentScale = ContentScale.Crop,
-                                        alignment = Alignment.Center
-                                    )
-                                )
-                                Column(
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .weight(3f)
-                                ) {
-                                    Text(hero.name)
-                                    Text(hero.fullName)
-                                }
-
-                                IconButton(onClick = {}) {
-                                    Icon(Icons.Filled.Favorite, "Favorite")
-                                }
-                            }
+                            HeroImage(hero)
                         }
                     }
                 }
             }
-            if (state.isLoading) {
-                CircularProgressIndicator()
+            Column(modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center) {
+                if (state.isLoading) {
+                    CircularProgressIndicator()
+                }
+                if (state.message.isNotEmpty()) {
+                    Text(state.message)
+                }
             }
-            if (state.message.isNotEmpty()) {
-                Text(state.message)
-            }
+
+        }
+    }
+}
+
+@Composable
+fun HeroImage(hero: Hero) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        GlideImage(
+            modifier = Modifier.size(80.dp),
+            imageModel = { hero.poster }, // loading a network image using an URL.
+            imageOptions = ImageOptions(
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center
+            )
+        )
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .weight(3f)
+        ) {
+            Text(hero.name)
+            Text(hero.fullName)
+        }
+
+        IconButton(onClick = {}) {
+            Icon(Icons.Filled.Favorite, "Favorite", tint = if (hero.isFavorite) Color.Red else Color.Gray)
         }
     }
 }
