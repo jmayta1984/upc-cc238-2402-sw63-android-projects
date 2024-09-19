@@ -10,20 +10,29 @@ import pe.edu.upc.jokescompose.common.UIState
 import pe.edu.upc.jokescompose.data.JokeRepository
 import pe.edu.upc.jokescompose.domain.Joke
 
-class JokeViewModel(private val repository: JokeRepository): ViewModel() {
+class JokeViewModel(private val repository: JokeRepository) : ViewModel() {
 
     private val _state = mutableStateOf(UIState<Joke>())
     val state: State<UIState<Joke>> get() = _state
+
+    fun onScoreChanged(score: Int) {
+
+        val newJoke: Joke
+        _state.value.data?.let { joke ->
+            newJoke = Joke(joke.description, if (score == joke.score) 0 else score)
+            _state.value = UIState(data = newJoke)
+        }
+    }
 
     fun getJoke() {
         _state.value = UIState(isLoading = true)
 
         viewModelScope.launch {
-           val result = repository.getJoke()
+            val result = repository.getJoke()
             if (result is Resource.Success) {
                 _state.value = UIState(data = result.data)
             } else {
-                _state.value = UIState(message = result.message?:"An error occurred")
+                _state.value = UIState(message = result.message ?: "An error occurred")
             }
 
         }

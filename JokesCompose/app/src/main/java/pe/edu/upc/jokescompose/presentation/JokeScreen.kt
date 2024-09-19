@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -42,15 +41,23 @@ fun JokeScreen(viewModel: JokeViewModel) {
                 Text(state.message)
             }
             state.data?.let { joke ->
+
+
                 Card(modifier = Modifier.padding(4.dp)) {
                     Column(modifier = Modifier.padding(8.dp)) {
                         Text(joke.description)
-                        Row (modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center){
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
                             for (i in 1..5) {
-                                IconButton(onClick = {}) {
-                                    Icon(Icons.Filled.Star, "score",
-                                        tint = Color.Gray)
+                                IconButton(onClick = {
+                                    viewModel.onScoreChanged(i)
+                                }) {
+                                    Icon(
+                                        Icons.Filled.Star, "score",
+                                        tint = if (i <= joke.score) Color.Red else Color.Gray
+                                    )
                                 }
                             }
                         }
