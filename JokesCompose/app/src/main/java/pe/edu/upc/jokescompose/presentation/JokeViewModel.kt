@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import pe.edu.upc.jokescompose.common.Resource
 import pe.edu.upc.jokescompose.common.UIState
-import pe.edu.upc.jokescompose.data.JokeRepository
+import pe.edu.upc.jokescompose.data.repository.JokeRepository
 import pe.edu.upc.jokescompose.domain.Joke
 
 class JokeViewModel(private val repository: JokeRepository) : ViewModel() {
@@ -21,7 +21,15 @@ class JokeViewModel(private val repository: JokeRepository) : ViewModel() {
         _state.value.data?.let { joke ->
             newJoke = Joke(joke.description, if (score == joke.score) 0 else score)
             _state.value = UIState(data = newJoke)
+
+            viewModelScope.launch {
+                if (joke.score == 0 ){
+                    repository.insertJoke(newJoke)
+                }
+            }
+
         }
+
     }
 
     fun getJoke() {

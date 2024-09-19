@@ -4,9 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.room.Room
 import pe.edu.upc.jokescompose.common.Constants
-import pe.edu.upc.jokescompose.data.JokeRepository
-import pe.edu.upc.jokescompose.data.JokeService
+import pe.edu.upc.jokescompose.data.local.AppDatabase
+import pe.edu.upc.jokescompose.data.repository.JokeRepository
+import pe.edu.upc.jokescompose.data.remote.JokeService
 import pe.edu.upc.jokescompose.presentation.JokeScreen
 import pe.edu.upc.jokescompose.presentation.JokeViewModel
 import pe.edu.upc.jokescompose.ui.theme.JokesComposeTheme
@@ -23,7 +25,12 @@ class MainActivity : ComponentActivity() {
             .build()
             .create(JokeService::class.java)
 
-        val viewModel = JokeViewModel(JokeRepository(service))
+        val dao = Room
+            .databaseBuilder(applicationContext,AppDatabase::class.java, "jokes-db")
+            .build()
+            .getJokeDao()
+
+        val viewModel = JokeViewModel(JokeRepository(service, dao))
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
