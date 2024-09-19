@@ -23,8 +23,17 @@ class JokeViewModel(private val repository: JokeRepository) : ViewModel() {
             _state.value = UIState(data = newJoke)
 
             viewModelScope.launch {
-                if (joke.score == 0 ){
+                if (joke.score == 0) {
                     repository.insertJoke(newJoke)
+                    return@launch
+                }
+                if (newJoke.score == 0) {
+                    repository.deleteJoke(joke)
+                    return@launch
+                }
+                if (newJoke.score > 0 && joke.score > 0) {
+                    repository.updateJoke(newJoke)
+                    return@launch
                 }
             }
 
