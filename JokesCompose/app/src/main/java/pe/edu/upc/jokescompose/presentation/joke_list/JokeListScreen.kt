@@ -45,7 +45,7 @@ fun JokeListScreen(viewModel: JokeListViewModel) {
                                 ) {
                                     for (i in 1..5) {
                                         IconButton(onClick = {
-
+                                            viewModel.onScoreChanged(i, joke)
                                         }) {
                                             Icon(
                                                 Icons.Filled.Star, "score",
