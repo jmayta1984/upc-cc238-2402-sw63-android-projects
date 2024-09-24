@@ -1,4 +1,4 @@
-package pe.edu.upc.jokescompose.presentation
+package pe.edu.upc.jokescompose.presentation.joke
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +15,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -26,7 +27,10 @@ fun JokeScreen(viewModel: JokeViewModel) {
     val state = viewModel.state.value
 
     Scaffold { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues))
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally)
         {
             OutlinedButton(onClick = {
                 viewModel.getJoke()

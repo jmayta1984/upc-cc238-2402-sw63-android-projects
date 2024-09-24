@@ -27,22 +27,41 @@ class JokeRepository(
     }
 
     suspend fun getJoke(): Resource<Joke> = withContext(Dispatchers.IO) {
+        try {
+            val response = service.getJoke()
 
-        val response = service.getJoke()
+            if (response.isSuccessful) {
+                response.body()?.let { jokeDto ->
 
-        if (response.isSuccessful) {
-            response.body()?.let { jokeDto ->
-
-                val joke = jokeDto.toJoke()
-                dao.fetchById(joke.description)?.let { jokeEntity ->
-                    joke.score = jokeEntity.score
+                    val joke = jokeDto.toJoke()
+                    dao.fetchById(joke.description)?.let { jokeEntity ->
+                        joke.score = jokeEntity.score
+                    }
+                    return@withContext Resource.Success(data = joke)
                 }
-                return@withContext Resource.Success(data = joke)
+                return@withContext Resource.Error(message = response.message())
             }
             return@withContext Resource.Error(message = response.message())
+        } catch (e: Exception) {
+            return@withContext Resource.Error(message = e.message ?: "An exception occurred")
+
         }
-        return@withContext Resource.Error(message = response.message())
 
 
+    }
+
+    suspend fun getJokes(): Resource<List<Joke>> = withContext(Dispatchers.IO) {
+
+        try {
+            val jokesEntity = dao.fetchAll()
+            val jokes = jokesEntity.map { jokeEntity: JokeEntity ->
+                Joke(jokeEntity.description, jokeEntity.score)
+            }.toList()
+            return@withContext Resource.Success(data = jokes)
+
+        } catch (e: Exception) {
+            return@withContext Resource.Error(message = e.message ?: "An exception occurred")
+
+        }
     }
 }

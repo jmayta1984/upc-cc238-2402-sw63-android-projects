@@ -1,4 +1,4 @@
-package pe.edu.upc.jokescompose.presentation
+package pe.edu.upc.jokescompose.presentation.joke
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
