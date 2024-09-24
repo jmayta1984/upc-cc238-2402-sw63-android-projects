@@ -2,9 +2,9 @@ package pe.edu.upc.jokescompose.presentation.joke_list
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pe.edu.upc.jokescompose.common.Resource
 import pe.edu.upc.jokescompose.common.UIState
@@ -38,6 +38,7 @@ class JokeListViewModel(private val repository: JokeRepository) : ViewModel() {
         viewModelScope.launch {
             if (score == joke.score) {
                 repository.deleteJoke(joke)
+                delay(750)
                 jokes = repository.getJokes().data
 
             } else {
