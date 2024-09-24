@@ -41,7 +41,7 @@ class JokeListViewModel(private val repository: JokeRepository) : ViewModel() {
                 jokes = repository.getJokes().data
 
             } else {
-                _state.value = UIState(data = emptyList())
+                _state.value.data = emptyList()
                 joke.score = score
                 repository.updateJoke(joke)
             }
